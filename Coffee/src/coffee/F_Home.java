@@ -5,6 +5,17 @@
  */
 package coffee;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 /**
  *
  * @author nguye
@@ -16,6 +27,12 @@ public class F_Home extends javax.swing.JFrame {
      */
     public F_Home() {
         initComponents();
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+        });
     }
 
     /**
@@ -27,23 +44,23 @@ public class F_Home extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabPanelHome = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jPasswordField2 = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        txtID_Account = new javax.swing.JTextField();
+        txtFullName_Account = new javax.swing.JTextField();
+        btnSave = new javax.swing.JButton();
+        btnHuy = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblAccount = new javax.swing.JTable();
+        txtUsername_Account = new javax.swing.JTextField();
+        txtPassword_Account = new javax.swing.JTextField();
+        btnDelete = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -101,7 +118,12 @@ public class F_Home extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 30)); // NOI18N
+        tabPanelHome.setFont(new java.awt.Font("Tahoma", 1, 30)); // NOI18N
+        tabPanelHome.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tabPanelHomeStateChanged(evt);
+            }
+        });
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -119,33 +141,54 @@ public class F_Home extends javax.swing.JFrame {
         jLabel4.setText("PassWord:");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        jLabel5.setText("RePassWord:");
+        jLabel5.setText("ID:");
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
-        jButton1.setText("Thêm Tài Khoản");
+        txtID_Account.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtID_Account.setEnabled(false);
 
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
-        jButton3.setText("Lưu");
+        btnSave.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        btnSave.setText("Lưu");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
-        jButton4.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
-        jButton4.setText("Hủy");
+        btnHuy.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        btnHuy.setText("Hủy");
+        btnHuy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHuyActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 51, 51));
         jLabel8.setText("Danh Sách Tài Khoản");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblAccount.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tblAccount.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
-                "Họ Và Tên", "UserName", "PassWord"
+                "ID", "Họ Và Tên", "UserName", "PassWord"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblAccount.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblAccountMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblAccount);
+
+        btnDelete.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        btnDelete.setText("Xóa");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -153,33 +196,30 @@ public class F_Home extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addComponent(jButton1)
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton3)
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton4))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnDelete)
+                        .addGap(55, 55, 55)
+                        .addComponent(btnSave)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnHuy))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(jLabel1))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(69, 69, 69)
+                        .addGap(70, 70, 70)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel3))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(jLabel5)))
-                        .addGap(31, 31, 31)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2))
+                        .addGap(30, 30, 30)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2)
-                            .addComponent(jPasswordField1)
-                            .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
+                            .addComponent(txtID_Account, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                            .addComponent(txtFullName_Account)
+                            .addComponent(txtUsername_Account)
+                            .addComponent(txtPassword_Account))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 273, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 851, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -195,32 +235,32 @@ public class F_Home extends javax.swing.JFrame {
                 .addGap(39, 39, 39)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtID_Account, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addGap(22, 22, 22)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtFullName_Account, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
                         .addGap(22, 22, 22)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(22, 22, 22)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtUsername_Account, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel4)
-                            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addGap(34, 34, 34)
+                            .addComponent(txtPassword_Account, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(37, 37, 37)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton3)
-                            .addComponent(jButton4))
+                            .addComponent(btnSave)
+                            .addComponent(btnHuy)
+                            .addComponent(btnDelete))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("QL Nhân Viên", jPanel2);
+        tabPanelHome.addTab("QL Tài Khoản", jPanel2);
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -390,7 +430,7 @@ public class F_Home extends javax.swing.JFrame {
                     .addComponent(jScrollPane3)))
         );
 
-        jTabbedPane1.addTab("QL Menu", jPanel5);
+        tabPanelHome.addTab("QL Menu", jPanel5);
 
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
         jPanel7.setToolTipText("");
@@ -612,7 +652,7 @@ public class F_Home extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Bảng Oder", jPanel7);
+        tabPanelHome.addTab("Bảng Oder", jPanel7);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -625,7 +665,7 @@ public class F_Home extends javax.swing.JFrame {
             .addGap(0, 800, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Thống Kê", jPanel6);
+        tabPanelHome.addTab("Thống Kê", jPanel6);
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -639,21 +679,151 @@ public class F_Home extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(tabPanelHome)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(tabPanelHome)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    public void Close()
-    {
-        
+    private void tabPanelHomeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabPanelHomeStateChanged
+        // TODO add your handling code here:
+        int index = tabPanelHome.getSelectedIndex();
+
+        //panel trang quản lý nhân viên
+        if (index == 0) {
+
+            txtID_Account.setText("");
+            txtFullName_Account.setText("");
+            txtUsername_Account.setText("");
+            txtPassword_Account.setText("");
+
+            btnDelete.setVisible(false);
+            showDataInTableAccount();
+
+        }
+    }//GEN-LAST:event_tabPanelHomeStateChanged
+
+    private void tblAccountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAccountMouseClicked
+        // TODO add your handling code here:
+        int i = tblAccount.getSelectedRow();
+        TableModel model = tblAccount.getModel();
+        txtID_Account.setText(model.getValueAt(i, 0).toString());
+        txtFullName_Account.setText(model.getValueAt(i, 1).toString());
+        txtUsername_Account.setText(model.getValueAt(i, 2).toString());
+        txtPassword_Account.setText(model.getValueAt(i, 3).toString());
+        btnDelete.setVisible(true);
+
+    }//GEN-LAST:event_tblAccountMouseClicked
+
+    private void btnHuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyActionPerformed
+        // TODO add your handling code here:
+        txtID_Account.setText("");
+        txtFullName_Account.setText("");
+        txtUsername_Account.setText("");
+        txtPassword_Account.setText("");
+    }//GEN-LAST:event_btnHuyActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+        if (txtID_Account.getText().toString().equals("")) {
+            PreparedStatement ps;
+            String query = "INSERT INTO `account`(`fullName`, `username`, `password`) VALUES (?,?,?)";
+            try {
+                ps = Data.DatabaseInfo.getConnection().prepareStatement(query);
+
+                ps.setString(1, txtFullName_Account.getText());
+                ps.setString(2, txtUsername_Account.getText());
+                ps.setString(3, txtPassword_Account.getText());
+
+                if (ps.executeUpdate() > 0) {
+                    JOptionPane.showMessageDialog(null, "Thêm Thành Công");
+                    showDataInTableAccount();
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(F_Register.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            PreparedStatement ps;
+            String query = "UPDATE `account` SET `fullName`=?,`username`=?,`password`=? WHERE `id`=?";
+            try {
+                ps = Data.DatabaseInfo.getConnection().prepareStatement(query);
+
+                ps.setString(1, txtFullName_Account.getText());
+                ps.setString(2, txtUsername_Account.getText());
+                ps.setString(3, txtPassword_Account.getText());
+                ps.setString(4, txtID_Account.getText());
+
+                if (ps.executeUpdate() > 0) {
+                    JOptionPane.showMessageDialog(null, "Sửa Thành Công");
+                    showDataInTableAccount();
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(F_Register.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        PreparedStatement ps;
+        String query = "DELETE from `account` where id=?";
+        try {
+            ps = Data.DatabaseInfo.getConnection().prepareStatement(query);
+
+            ps.setString(1, txtID_Account.getText());
+
+            if (ps.executeUpdate() > 0) {
+                JOptionPane.showMessageDialog(null, "Xóa Thành Công");
+                showDataInTableAccount();
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(F_Register.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    public void showDataInTableAccount() {
+        PreparedStatement ps;
+        ResultSet rs;
+
+        DefaultTableModel tblModel = (DefaultTableModel) tblAccount.getModel();
+        tblModel.setRowCount(0);
+
+        String query = "SELECT * FROM `account`";
+        try {
+            ps = Data.DatabaseInfo.getConnection().prepareStatement(query);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String id = String.valueOf(rs.getInt("id"));
+                String fullName = rs.getString("fullName");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+
+                String tbData[] = {id, fullName, username, password};
+                tblModel.addRow(tbData);
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(F_Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
+
+    public void Close() {
+
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -690,14 +860,14 @@ public class F_Home extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnHuy;
+    private javax.swing.JButton btnSave;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
@@ -737,23 +907,17 @@ public class F_Home extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
     private javax.swing.JTable jTable5;
     private javax.swing.JTable jTable6;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
@@ -761,5 +925,11 @@ public class F_Home extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
+    private javax.swing.JTabbedPane tabPanelHome;
+    private javax.swing.JTable tblAccount;
+    private javax.swing.JTextField txtFullName_Account;
+    private javax.swing.JTextField txtID_Account;
+    private javax.swing.JTextField txtPassword_Account;
+    private javax.swing.JTextField txtUsername_Account;
     // End of variables declaration//GEN-END:variables
 }

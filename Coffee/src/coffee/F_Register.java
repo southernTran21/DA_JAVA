@@ -157,19 +157,57 @@ public class F_Register extends javax.swing.JFrame {
         String txtConfirmPassword = new String(this.txtConfirmPassword.getPassword());
         String txtName = this.txtName.getText();
         String query = "INSERT INTO `account`(`fullName`, `username`, `password`) VALUES (?,?,?)";
-        try {
-            ps = Data.DatabaseInfo.getConnection().prepareStatement(query);
-
-            ps.setString(1, txtName);
-            ps.setString(2, txtPassword);
-            ps.setString(3, txtPassword);
-            
-            if(ps.executeUpdate() > 0){
-                JOptionPane.showMessageDialog(null, "Thêm Thành Công");
+        
+        if(txtName.equals("")||txtUsername.equals("") || txtPassword.equals("")|| txtConfirmPassword.equals(""))
+        {
+            JOptionPane.showMessageDialog(null, "Các phần không được bỏ trống!");
+        }
+        else
+        {
+            if(txtPassword.length() < 4)
+            {
+                JOptionPane.showMessageDialog(null, "Mật khẩu phải có ít nhất 4 ký tự");
             }
+            else{
+                boolean flag = true;
+                for (int i = 0; i < txtPassword.length(); i++) {
+                    if (Character.isWhitespace(txtPassword.charAt(i))) {
+                        flag = false;
+                    }
+                }
+                if(!flag)
+                {
+                    JOptionPane.showMessageDialog(null, "Mật khẩu không được có khoảng trắng");
+                    flag = true;
+                }
+                else
+                {
+                    if(!txtConfirmPassword.equals(txtPassword))
+                    {
+                        JOptionPane.showMessageDialog(null, "Mật khẩu không trùng khớp");
+                    }
+                    else
+                    {
+                        try {
+                            ps = Data.DatabaseInfo.getConnection().prepareStatement(query);
 
-        } catch (SQLException ex) {
-            Logger.getLogger(F_Register.class.getName()).log(Level.SEVERE, null, ex);
+                            ps.setString(1, txtName);
+                            ps.setString(2, txtPassword);
+                            ps.setString(3, txtPassword);
+
+                            if(ps.executeUpdate() > 0){
+                                JOptionPane.showMessageDialog(null, "Thêm Thành Công");
+                            }
+
+                            } catch (SQLException ex) {
+                            Logger.getLogger(F_Register.class.getName()).log(Level.SEVERE, null, ex); 
+                        }
+
+                    }
+                }
+                
+            }
+            
         }
     }//GEN-LAST:event_btnDangKyActionPerformed
 
