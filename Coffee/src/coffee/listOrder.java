@@ -11,6 +11,7 @@ package coffee;
  */
 public class listOrder {
 
+    private String id;
     private String productName;
     private int SL;
     private int price;
@@ -19,11 +20,20 @@ public class listOrder {
     public listOrder() {
     }
 
-    public listOrder(String productName, int SL, int price, int total) {
+    public listOrder(String id, String productName, int SL, int price, int total) {
+        this.id = id;
         this.productName = productName;
         this.SL = SL;
         this.price = price;
         this.total = total;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getProductName() {
@@ -58,5 +68,6 @@ public class listOrder {
         this.total = total;
     }
 
+    
 
 }

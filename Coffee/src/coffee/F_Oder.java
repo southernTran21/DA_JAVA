@@ -14,9 +14,12 @@ public class F_Oder extends javax.swing.JFrame {
     /**
      * Creates new form F_Oder
      */
-    public F_Oder() {
+    public F_Oder(String id) {
         initComponents();
+        idAccount = id;
+        
     }
+    private String idAccount = ""; 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -308,7 +311,7 @@ public class F_Oder extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new F_Oder().setVisible(true);
+                new F_Oder("").setVisible(true);
             }
         });
     }

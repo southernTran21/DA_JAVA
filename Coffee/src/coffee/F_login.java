@@ -5,6 +5,7 @@
  */
 package coffee;
 
+import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -58,6 +59,12 @@ public class F_login extends javax.swing.JFrame {
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox1ActionPerformed(evt);
+            }
+        });
+
+        txtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPasswordKeyPressed(evt);
             }
         });
 
@@ -159,8 +166,13 @@ public class F_login extends javax.swing.JFrame {
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(null, "Đăng Nhập Thành Công");
                     this.setVisible(false);
-                    new F_Home().setVisible(true);
-
+                    if (rs.getString("idQuyen").equals("1")) {
+                        F_Home formHome = new F_Home(rs.getString("id"));
+                        formHome.setVisible(true);
+                    } else {
+                        F_Oder formOrder = new F_Oder(rs.getString("id"));
+                        formOrder.setVisible(true);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Tài Khoản Hoặc Mật Khẩu Sai!!!!");
                 }
@@ -169,6 +181,46 @@ public class F_login extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void txtPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPasswordKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            PreparedStatement ps;
+            ResultSet rs;
+            String txtUsername = this.txtUsername.getText();
+            String txtPassword = new String(this.txtPassword.getPassword());
+            String query = "SELECT * FROM `account` WHERE `username`=? AND `password`=?";
+            if (txtUsername.equals("")) {
+                JOptionPane.showMessageDialog(null, "Username Không Được Trống");
+            } else if (txtPassword.equals("")) {
+                JOptionPane.showMessageDialog(null, "Password Không Được Trống");
+            } else {
+                try {
+                    ps = Data.DatabaseInfo.getConnection().prepareStatement(query);
+
+                    ps.setString(1, txtUsername);
+                    ps.setString(2, txtPassword);
+
+                    rs = ps.executeQuery();
+                    if (rs.next()) {
+                        JOptionPane.showMessageDialog(null, "Đăng Nhập Thành Công");
+                        this.setVisible(false);
+                        if (rs.getString("idQuyen").equals("1")) {
+                            F_Home formHome = new F_Home(rs.getString("id"));
+                            formHome.setVisible(true);
+                        } else {
+                            F_Oder formOrder = new F_Oder(rs.getString("id"));
+                            formOrder.setVisible(true);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Tài Khoản Hoặc Mật Khẩu Sai!!!!");
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(F_login.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_txtPasswordKeyPressed
 
     /**
      * @param args the command line arguments
