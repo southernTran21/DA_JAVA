@@ -9,9 +9,13 @@ import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -119,12 +123,14 @@ public class F_Home extends javax.swing.JFrame {
         txtGiamGia = new javax.swing.JTextField();
         btnClearAll = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jLabel27 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        startDate = new com.toedter.calendar.JDateChooser();
+        dateEnd = new com.toedter.calendar.JDateChooser();
         jButton1 = new javax.swing.JButton();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        tblBill = new javax.swing.JTable();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        tblChitietBill = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -763,7 +769,46 @@ public class F_Home extends javax.swing.JFrame {
 
         tabPanelHome.addTab("Oder", jPanel7);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jLabel27.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel27.setText("Hóa Đơn");
+
+        startDate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                startDateMouseClicked(evt);
+            }
+        });
+
+        jButton1.setText("Search");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        tblBill = new javax.swing.JTable(){
+            public boolean isCellEditable(int rowIndex, int colIndex){
+                return false;
+            }
+        };
+        tblBill.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID Hoa Don", "Ngay Lap Hoa Don", "Ten Nhan Vien", "So Luong", "Tam Tinh", "Giam Gia", "Tong tien"
+            }
+        ));
+        tblBill.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblBillMouseClicked(evt);
+            }
+        });
+        jScrollPane8.setViewportView(tblBill);
+
+        tblChitietBill.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -771,20 +816,15 @@ public class F_Home extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID Hoa Don", "ID Product", "SL", "TongTien"
             }
         ));
-        jScrollPane7.setViewportView(jTable1);
-
-        jLabel27.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel27.setText("Hóa Đơn");
-
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        tblChitietBill.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblChitietBillMouseClicked(evt);
             }
         });
+        jScrollPane7.setViewportView(tblChitietBill);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -794,15 +834,21 @@ public class F_Home extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel27)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jPanel6Layout.createSequentialGroup()
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(32, 32, 32)
-                            .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1))
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 747, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(1519, Short.MAX_VALUE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane8, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
+                                .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(32, 32, 32)
+                                .addComponent(dateEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addComponent(jButton1))
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(51, 51, 51)
+                                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 573, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(1008, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -811,14 +857,14 @@ public class F_Home extends javax.swing.JFrame {
                 .addComponent(jLabel27)
                 .addGap(14, 14, 14)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(110, Short.MAX_VALUE))
+                    .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
+                    .addComponent(dateEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(272, Short.MAX_VALUE))
         );
 
         tabPanelHome.addTab("Thống Kê", jPanel6);
@@ -878,10 +924,9 @@ public class F_Home extends javax.swing.JFrame {
         } else if (index == 2) {
             showDataInTableCategories(tblCatOrder);
             showDataInTableProductsForStatus(tblProductOrder);
+        } else if (index == 3) {
+            showDataInTableBill(tblBill);
         }
-//        else {
-//            JOptionPane.showMessageDialog(null, index);
-//        }
 
     }//GEN-LAST:event_tabPanelHomeStateChanged
 
@@ -1234,7 +1279,6 @@ public class F_Home extends javax.swing.JFrame {
         int giamGia = Integer.parseInt(txtGiamGia.getText());
         int tong = Integer.parseInt(txtTotal.getText());
         txtPhaiTra.setText((tong - (tong * giamGia / 100)) + "");
-        txtGiamGia.setText("");
     }//GEN-LAST:event_btnAcceptSaleActionPerformed
 
     private void txtKhachDuaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKhachDuaKeyPressed
@@ -1297,17 +1341,111 @@ public class F_Home extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSubmitActionPerformed
 
+    private void startDateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startDateMouseClicked
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_startDateMouseClicked
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-//        Date date = jDateChooser1.getDate();   //Import java.util not java.sql
-//        Format format = new SimpleDateFormat("dd/MM/yyyy");
-//        String temp = format.format(date);
-//        System.out.println(temp);
+
+        Date date = startDate.getDate();
+        Date date1 = dateEnd.getDate();
+        Format format1 = new SimpleDateFormat("yyyy/MM/dd");
+        String temp = format1.format(date);
+        String temp1 = format1.format(date1);
+
+        Date dateStart = null;
+        Date dateStop = null;
+        Date dateSystem = null;
+
+        DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDateTime now = LocalDateTime.now();
+        String dateNow = dtf2.format(now);
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            dateStart = format.parse(temp);
+            dateStop = format.parse(temp1);
+            dateSystem = format.parse(dateNow);
+
+        } catch (ParseException ex) {
+            Logger.getLogger(F_Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        int diff = (int) (dateSystem.getTime() - dateStart.getTime());
+        int diff2 = (int) (dateSystem.getTime() - dateStop.getTime());
+        
+        System.out.println(diff);
+        System.out.println(diff2);
+
+        //add table
+        PreparedStatement ps;
+        ResultSet rs;
+        DefaultTableModel tblModel = (DefaultTableModel) tblBill.getModel();
+        tblModel.setRowCount(0);
+        String query = "SELECT * FROM `hoadon` INNER JOIN account ON hoadon.idAccount=account.id";
+        try {
+            ps = Data.DatabaseInfo.getConnection().prepareStatement(query);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                String getDate = rs.getString("ngayLap");
+                String[] splitDate = getDate.split("/");
+                String dateResult = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
+
+                Date dateItem = null;
+
+                try {
+                    dateItem = format.parse(dateResult);
+
+                } catch (ParseException ex) {
+                    Logger.getLogger(F_Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                int diff3 = (int) (dateSystem.getTime() - dateItem.getTime());
+                
+                System.out.println(diff3);
+                     
+
+                if (diff3 <= -diff2 && diff3 >= -diff) {          
+                    System.out.println("check");    
+                    String id = rs.getString("idHoaDon");
+                    String ngayLap = rs.getString("ngayLap");
+                    String fullName = rs.getString("fullName");
+                    String SL = String.valueOf(rs.getInt("SL"));
+                    String tamTinh = String.valueOf(rs.getInt("tamTinh"));
+                    String giamGia = String.valueOf(rs.getInt("giamGia"));
+                    String tongTien = String.valueOf(rs.getInt("tongTien"));
+                    String tbData[] = {id, ngayLap, fullName, SL, tamTinh, giamGia, tongTien};
+                    tblModel.addRow(tbData);
+                }
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(F_Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void tblBillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBillMouseClicked
+        // TODO add your handling code here:
+        int i = tblBill.getSelectedRow();
+        TableModel model = tblBill.getModel();
+        showDataInTablechitietBill(model.getValueAt(i, 0).toString());
+    }//GEN-LAST:event_tblBillMouseClicked
+
+    private void tblChitietBillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblChitietBillMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblChitietBillMouseClicked
 
     private String idCatSelected = "";
     private String idProductSelected = "";
     private ArrayList<listOrder> listOrder = new ArrayList<>();
+    
 
     public void showDataInTableAccount() {
         PreparedStatement ps;
@@ -1502,6 +1640,69 @@ public class F_Home extends javax.swing.JFrame {
         return -1;
     }
 
+    public void showDataInTableBill(JTable a) {
+        PreparedStatement ps;
+        ResultSet rs;
+        DefaultTableModel tblModel = (DefaultTableModel) a.getModel();
+        tblModel.setRowCount(0);
+        Date date = startDate.getDate();
+        Date date1 = dateEnd.getDate();
+        String query = "SELECT * FROM `hoadon` INNER JOIN account ON hoadon.idAccount=account.id";
+        try {
+            ps = Data.DatabaseInfo.getConnection().prepareStatement(query);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String id = rs.getString("idHoaDon");
+                String ngayLap = rs.getString("ngayLap");
+                String fullName = rs.getString("fullName");
+                String SL = String.valueOf(rs.getInt("SL"));
+                String tamTinh = String.valueOf(rs.getInt("tamTinh"));
+                String giamGia = String.valueOf(rs.getInt("giamGia"));
+                String tongTien = String.valueOf(rs.getInt("tongTien"));
+                String tbData[] = {id, ngayLap, fullName, SL, tamTinh, giamGia, tongTien};
+                tblModel.addRow(tbData);
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(F_Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void showDataInTablechitietBill(String idHoaDon) {
+        PreparedStatement ps;
+        ResultSet rs;
+
+        DefaultTableModel tblModel = (DefaultTableModel) tblChitietBill.getModel();
+        tblModel.setRowCount(0);
+        System.out.println(idHoaDon);
+
+        String query = "SELECT * FROM `cthd` INNER JOIN products ON cthd.idProduct = products.id WHERE `idHoaDon` = " + idHoaDon;
+        try {
+            ps = Data.DatabaseInfo.getConnection().prepareStatement(query);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String id = rs.getString("idHoaDon");
+                String idproduct = String.valueOf(rs.getInt("idproduct"));
+                String SL = String.valueOf(rs.getInt("SL"));
+                String tongTien = String.valueOf(rs.getInt("tongTien"));
+                String tbData[] = {id, idproduct, SL, tongTien};
+
+                tblModel.addRow(tbData);
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(F_Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
     public void Close() {
 
     }
@@ -1557,10 +1758,9 @@ public class F_Home extends javax.swing.JFrame {
     private javax.swing.JButton btnSubmit;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cboCategories;
+    private com.toedter.calendar.JDateChooser dateEnd;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1602,13 +1802,16 @@ public class F_Home extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JRadioButton rbAn;
     private javax.swing.JRadioButton rbHienThi;
+    private com.toedter.calendar.JDateChooser startDate;
     private javax.swing.JTabbedPane tabPanelHome;
     private javax.swing.JTable tblAccount;
+    private javax.swing.JTable tblBill;
     private javax.swing.JTable tblCatOrder;
     private javax.swing.JTable tblCategories;
+    private javax.swing.JTable tblChitietBill;
     private javax.swing.JTable tblListOrder;
     private javax.swing.JTable tblProduct;
     public javax.swing.JTable tblProductOrder;
