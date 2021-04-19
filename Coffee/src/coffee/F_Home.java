@@ -1427,8 +1427,6 @@ public class F_Home extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(F_Home.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void tblBillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBillMouseClicked
